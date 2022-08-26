@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name" translatable="false">NMedia_Yandex_MapKit</string>
+    <string name="marker_name" translatable="false">Marker Name</string>
+    <string name="latitude" translatable="false">latitude:</string>
+    <string name="longitude" translatable="false">longitude:</string>
+    <string name="menu_edit" translatable="false">edit</string>
+    <string name="menu_remove" translatable="false">remove</string>
+    <string name="empty_markers" translatable="false">There are no markers.\nIf you create a new marker, it will appear here</string>
+    <string name="retry_loading" translatable="false">Retry</string>
+    <string name="error_loading" translatable="false">error loading</string>
+</resources>

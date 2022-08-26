@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_main"
+    app:startDestination="@id/feedFragment">
+
+    <fragment
+        android:id="@+id/feedFragment"
+        android:name="ru.netology.nmedia.activity.FeedFragment"
+        android:label="fragment_feed"
+        tools:layout="@layout/fragment_feed">
+        <action
+            android:id="@+id/action_feedFragment_to_fragmentMaps"
+            app:destination="@id/fragmentMaps" />
+        <action
+            android:id="@+id/action_feedFragment_to_fragmentNewMarkerByCoordinates"
+            app:destination="@id/fragmentNewMarkerByCoordinates" />
+        <action
+            android:id="@+id/action_feedFragment_to_fragmentNewMarkerByMap"
+            app:destination="@id/fragmentNewMarkerByMap" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentMaps"
+        android:name="ru.netology.nmedia.activity.FragmentMaps"
+        android:label="FragmentMaps" />
+    <fragment
+        android:id="@+id/fragmentNewMarkerByCoordinates"
+        android:name="ru.netology.nmedia.activity.FragmentNewMarkerByCoordinates"
+        android:label="fragment_new_marker_by_coordinates"
+        tools:layout="@layout/fragment_new_marker_by_coordinates" />
+    <fragment
+        android:id="@+id/fragmentNewMarkerByMap"
+        android:name="ru.netology.nmedia.activity.FragmentNewMarkerByMap"
+        android:label="FragmentNewMarkerByMap" />
+</navigation>

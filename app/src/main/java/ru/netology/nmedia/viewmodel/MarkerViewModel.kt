@@ -41,7 +41,7 @@ class MarkerViewModel(application: Application) : AndroidViewModel(application) 
 
     private val edited = MutableLiveData(empty)
     private val _postCreated = SingleLiveEvent<Unit>()
-    val postCreated: LiveData<Unit>
+    val markerCreated: LiveData<Unit>
         get() = _postCreated
 
     init {

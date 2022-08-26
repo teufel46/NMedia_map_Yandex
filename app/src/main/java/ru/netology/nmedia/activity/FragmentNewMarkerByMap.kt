@@ -139,7 +139,7 @@ class FragmentNewMarkerByMap : Fragment(), UserLocationObjectListener, CameraLis
             }
         }
 
-        viewModel.postCreated.observe(viewLifecycleOwner) {
+        viewModel.markerCreated.observe(viewLifecycleOwner) {
             findNavController().navigateUp()
         }
 

@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
+import com.yandex.mapkit.geometry.Point
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import ru.netology.nmedia.R
 import ru.netology.nmedia.activity.FragmentNewMarkerByCoordinates.Companion.doubleArg1
@@ -19,6 +20,8 @@ import ru.netology.nmedia.adapter.MarkerAdapter
 import ru.netology.nmedia.databinding.FragmentFeedBinding
 import ru.netology.nmedia.dto.Marker
 import ru.netology.nmedia.viewmodel.MarkerViewModel
+
+val coordinatesMoscow = Point(55.7522200, 37.6155600)
 
 class FeedFragment : Fragment() {
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -77,12 +80,12 @@ class FeedFragment : Fragment() {
 
         binding.fab.setOnClickListener {
             findNavController().navigate(R.id.action_feedFragment_to_fragmentNewMarkerByMap,
-        //action_feedFragment_to_fragmentNewMarkerByCoordinates)
-            Bundle().apply {
-                textArg = null
-                doubleArg1 = 0.0
-                doubleArg2 = 0.0
-            })
+                //action_feedFragment_to_fragmentNewMarkerByCoordinates)
+                Bundle().apply {
+                    textArg = null
+                    doubleArg1 = coordinatesMoscow.latitude
+                    doubleArg2 = coordinatesMoscow.longitude
+                })
         }
 
         return binding.root

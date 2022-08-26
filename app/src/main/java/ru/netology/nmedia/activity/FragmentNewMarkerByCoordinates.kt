@@ -71,7 +71,7 @@ class FragmentNewMarkerByCoordinates : Fragment() {
 
         binding.editNameMarker.requestFocus()
 
-        viewModel.postCreated.observe(viewLifecycleOwner) {
+        viewModel.markerCreated.observe(viewLifecycleOwner) {
             findNavController().navigateUp()
         }
 

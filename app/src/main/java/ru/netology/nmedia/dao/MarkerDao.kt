@@ -10,12 +10,6 @@ interface MarkerDao {
     @Query("SELECT * FROM MarkerEntity ORDER BY id DESC")
     fun getAll(): Flow<List<MarkerEntity>>
 
-    @Query("SELECT COUNT(*) == 0 FROM MarkerEntity")
-    suspend fun isEmpty(): Boolean
-
-    @Query("SELECT COUNT(*) FROM MarkerEntity")
-    suspend fun count(): Int
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(post: MarkerEntity)
 

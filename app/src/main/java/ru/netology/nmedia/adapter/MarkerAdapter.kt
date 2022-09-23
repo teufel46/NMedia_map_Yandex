@@ -39,10 +39,8 @@ class MarkerViewHolder(
     fun bind(marker: Marker) {
         binding.apply {
             nameLabel.text = marker.name
-            published.text = "(" + marker.latitude.toString() +";"+ marker.longitude.toString()+")"
-
-
-            menu.visibility = View.VISIBLE
+            published.text =
+                "(" + marker.latitude.toString() + ";" + marker.longitude.toString() + ")"
 
             menu.setOnClickListener {
                 PopupMenu(it.context, it).apply {
@@ -70,7 +68,9 @@ class MarkerViewHolder(
             }
         }
     }
-}class MarkerDiffCallback : DiffUtil.ItemCallback<Marker>() {
+}
+
+class MarkerDiffCallback : DiffUtil.ItemCallback<Marker>() {
     override fun areItemsTheSame(oldItem: Marker, newItem: Marker): Boolean {
         return oldItem.id == newItem.id
     }

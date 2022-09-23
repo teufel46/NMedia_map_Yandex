@@ -38,8 +38,8 @@ class FragmentNewMarkerByMap : Fragment(), UserLocationObjectListener, CameraLis
     InputListener {
     val requestPermissionLocation = 1
     var marker: PlacemarkMapObject? = null
-    private lateinit var mapView: MapView
-    private lateinit var userLocationLayer: UserLocationLayer
+    private var mapView: MapView? = null
+    private var userLocationLayer: UserLocationLayer? = null
     private var permissionLocation = false
     private var routeStartLocation = Point(0.0, 0.0)
     private var followUserLocation = false
@@ -71,7 +71,7 @@ class FragmentNewMarkerByMap : Fragment(), UserLocationObjectListener, CameraLis
                         it.editLatitude.text.isEmpty() ||
                         it.editLongitude.text.isEmpty()
                     ) {
-                        Snackbar.make(fragmentBinding!!.root, "Data id empty", Snackbar.LENGTH_LONG)
+                        Snackbar.make(it.root, "Data id empty", Snackbar.LENGTH_LONG)
                             .show()
                     } else {
                         viewModel.changeContent(
@@ -103,26 +103,24 @@ class FragmentNewMarkerByMap : Fragment(), UserLocationObjectListener, CameraLis
         fragmentBinding = binding
 
         mapView = binding.mapview
-        mapView.map.addInputListener(this)
+        mapView?.map?.addInputListener(this)
 
         val markerName = arguments?.textArg
-        val markerLatitude = arguments?.doubleArg1
-        val markerLongitude = arguments?.doubleArg2
+        val markerLatitude = (arguments?.doubleArg1 ?: 0).toDouble()
+        val markerLongitude =(arguments?.doubleArg2 ?: 0).toDouble()
+        routeStartLocation = Point(markerLatitude, markerLongitude)
 
-        routeStartLocation = Point(markerLatitude!!, markerLongitude!!)
-
-        binding.editNameMarker.requestFocus()
-        if (markerName != null) {
+        followUserLocation = if (markerName != null) {
             binding.editNameMarker.setText(markerName)
             binding.editLatitude.setText(markerLatitude.toString())
             binding.editLongitude.setText(markerLongitude.toString())
             createMarker(routeStartLocation)
-            followUserLocation = false
+            false
         } else {
-            followUserLocation = true
+            true
         }
 
-        mapView.map?.move(
+        mapView?.map?.move(
             CameraPosition(routeStartLocation, 15.0f, 0.0f, 0.0f),
             Animation(Animation.Type.SMOOTH, 2F),
             null
@@ -147,7 +145,7 @@ class FragmentNewMarkerByMap : Fragment(), UserLocationObjectListener, CameraLis
     }
 
     override fun onStop() {
-        mapView.onStop()
+        mapView?.onStop()
         MapKitFactory.getInstance().onStop()
         super.onStop()
     }
@@ -155,11 +153,13 @@ class FragmentNewMarkerByMap : Fragment(), UserLocationObjectListener, CameraLis
     override fun onStart() {
         super.onStart()
         MapKitFactory.getInstance().onStart()
-        mapView.onStart()
+        mapView?.onStart()
     }
 
     override fun onDestroyView() {
         fragmentBinding = null
+        mapView = null
+        userLocationLayer = null
         super.onDestroyView()
     }
 
@@ -173,18 +173,23 @@ class FragmentNewMarkerByMap : Fragment(), UserLocationObjectListener, CameraLis
 
     private fun onMapReady() {
         val mapKit = MapKitFactory.getInstance()
-        userLocationLayer = mapKit.createUserLocationLayer(mapView.mapWindow)
-        userLocationLayer.isVisible = true
-        userLocationLayer.isHeadingEnabled = true
-        userLocationLayer.setObjectListener(this)
-        mapView.map.addCameraListener(this)
+        userLocationLayer = mapView?.let { mapKit.createUserLocationLayer(it.mapWindow) }
+        userLocationLayer?.isVisible = true
+        userLocationLayer?.isHeadingEnabled = true
+        userLocationLayer?.setObjectListener(this)
+        mapView?.map?.addCameraListener(this)
         permissionLocation = true
     }
 
     private fun createMarker(point: Point) {
-        if (marker != null) mapView.map.mapObjects.remove(marker!!)
+        marker.let {
+            if (it != null) {
+                mapView?.map?.mapObjects?.remove(it)
+            }
+        }
+
         lifecycleScope.launch {
-            marker = mapView.map.mapObjects.addPlacemark(
+            marker = mapView?.map?.mapObjects?.addPlacemark(
                 Point(point.latitude, point.longitude),
                 ImageProvider.fromResource(
                     getApplicationContext(),
@@ -192,14 +197,14 @@ class FragmentNewMarkerByMap : Fragment(), UserLocationObjectListener, CameraLis
                 )
             )
         }
-        marker!!.opacity = 0.5f
+        marker?.opacity = 0.5f
     }
 
     private fun cameraUserPosition() {
-        if (userLocationLayer.cameraPosition() != null) {
-            routeStartLocation = userLocationLayer.cameraPosition()!!.target
-        }
-        mapView.map.move(
+        val start = userLocationLayer?.cameraPosition()?.target
+        if (start != null) routeStartLocation = start
+
+        mapView?.map?.move(
             CameraPosition(routeStartLocation, 16f, 0f, 0f),
             Animation(Animation.Type.SMOOTH, 1f),
             null
@@ -223,16 +228,18 @@ class FragmentNewMarkerByMap : Fragment(), UserLocationObjectListener, CameraLis
     }
 
     private fun setAnchor() {
-        userLocationLayer.setAnchor(
-            PointF((mapView.width * 0.5).toFloat(), (mapView.height * 0.5).toFloat()),
-            PointF((mapView.width * 0.5).toFloat(), (mapView.height * 0.83).toFloat())
+        val x = (mapView?.width?.times(0.5.toFloat()) ?: 0).toFloat()
+        val y1 = (mapView?.height?.times(0.5.toFloat()) ?: 0).toFloat()
+        val y2 = (mapView?.height?.times(0.83.toFloat()) ?: 0).toFloat()
+        userLocationLayer?.setAnchor(
+            PointF(x, y1), PointF(x, y2)
         )
         fragmentBinding?.userLocationFab?.setImageResource(R.drawable.ic_baseline_my_location_24)
         followUserLocation = false
     }
 
     private fun noAnchor() {
-        userLocationLayer.resetAnchor()
+        userLocationLayer?.resetAnchor()
         fragmentBinding?.userLocationFab?.setImageResource(R.drawable.ic_baseline_location_searching_24)
     }
 

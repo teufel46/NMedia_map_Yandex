@@ -7,9 +7,6 @@ import ru.netology.nmedia.dao.MarkerDao
 import ru.netology.nmedia.dto.*
 import ru.netology.nmedia.entity.MarkerEntity
 import ru.netology.nmedia.entity.toDto
-import ru.netology.nmedia.error.NetworkError
-import ru.netology.nmedia.error.UnknownError
-import java.io.IOException
 
 class MarkerRepositoryImpl(private val dao: MarkerDao) : MarkerRepository {
     override val data = dao.getAll()
@@ -19,30 +16,24 @@ class MarkerRepositoryImpl(private val dao: MarkerDao) : MarkerRepository {
     override suspend fun getAll() {
         try {
             dao.getAll()
-        } catch (e: IOException) {
-            throw NetworkError
         } catch (e: Exception) {
-            throw UnknownError
+           println(e.message)
         }
     }
 
      override suspend fun save(marker: Marker) {
         try {
             dao.insert(MarkerEntity.fromDto(marker))
-        } catch (e: IOException) {
-            throw NetworkError
         } catch (e: Exception) {
-            throw UnknownError
+            println(e.message)
         }
     }
 
     override suspend fun removeById(id: Long) {
         try {
             dao.removeById(id)
-        } catch (e: IOException) {
-            throw NetworkError
         } catch (e: Exception) {
-            throw UnknownError
+            println(e.message)
         }
     }
 }

@@ -24,7 +24,7 @@ import ru.netology.nmedia.databinding.FragmentMapsBinding
 
 
 class FragmentMaps : Fragment() {
-    var mapView: MapView? = null
+    private var mapView: MapView? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,23 +35,23 @@ class FragmentMaps : Fragment() {
 
         mapView = binding.mapview
 
-        val markerName = arguments?.textArg
-        val markerLatitude = arguments?.doubleArg1
-        val markerLongitude = arguments?.doubleArg2
+        val markerName = requireArguments().textArg
+        val markerLatitude = requireArguments().doubleArg1
+        val markerLongitude = requireArguments().doubleArg2
 
 
         mapView?.getMap()?.move(
-            CameraPosition(Point(markerLatitude!!, markerLongitude!!), 15.0f, 0.0f, 0.0f),
+            CameraPosition(Point(markerLatitude, markerLongitude), 15.0f, 0.0f, 0.0f),
             Animation(Animation.Type.SMOOTH, 2F),
             null
         )
 
 
-        val marker = mapView!!.map.mapObjects.addPlacemark(
-            Point(markerLatitude!!, markerLongitude!!),
+        val marker = mapView?.map?.mapObjects?.addPlacemark(
+            Point(markerLatitude, markerLongitude),
             ImageProvider.fromResource(getApplicationContext(), R.drawable.btn_star_big_on)
         )
-        marker.opacity = 0.5f
+        marker?.opacity = 0.5f
 
         val textView = TextView(getApplicationContext())
         val params = ViewGroup.LayoutParams(
@@ -63,7 +63,7 @@ class FragmentMaps : Fragment() {
         textView.text = markerName
         val viewProvider = ViewProvider(textView)
 
-        mapView!!.map.mapObjects.addPlacemark(
+        mapView?.map?.mapObjects?.addPlacemark(
             Point(markerLatitude - 0.0005, markerLongitude),
             viewProvider
         )
